@@ -1,18 +1,19 @@
 #!env zsh
 
-directory=/Users/testuser/Desktop/Composer/
+directory=/home/micro/work/soundfx/Composer
 remote=10.0.0.3
 log=transfer.log.txt
-[[ -z $DEBUG ]] && debug=echo
+$DEBUG && debug=echo
 
-[[ `hostname` = 'macro' ]] && dirs='LoopRec' || dirs='MicRec KeyRec Bin' 
-for remote_dir in $dirs
+[[ `hostname` = 'macro' ]] && dirs=(MicRec KeyRec Bin) || dirs=(LoopRec)
+for remote_dir in $dirs; do
   i=0
-  rm $log; touch $log
-  for file in $directory/$remote_dir/*(om[1,20]).
+  rm $log > /dev/null
+  touch $log
+  for file in $directory/$remote_dir/*(om[1,20]); do
     $debug rsync -a -- $micrec $remote:$directory/$remote_dir/
     $debug echo $i,"$file" >> $log
-    i=(( i++ ))
-  end
+    i=$(( i + 1 ))
+  done
   $debug rsync -a -- $log $remote:$directory/$remote_dir/
-end
+done
