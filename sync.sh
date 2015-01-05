@@ -19,8 +19,8 @@ for remote_dir in $dirs; do
   [[ -f $log ]] && rm $log
   touch $log
   for file in $prefix/$remote_dir/*(om[1,20]); do
+    echo $i,"$file" >> $prefix/$remote_dir/$log
     $debug rsync -a -- $file $remote:$prefix/$remote_dir/
-    echo $i,"$file" >> $log
     i=$(( i + 1 ))
   done
   $debug rsync -a -- $log $remote:$prefix/$remote_dir/
