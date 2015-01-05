@@ -23,10 +23,10 @@ for remote_dir in $dirs; do
   [[ -f $log ]] && rm $log; touch $log
 
   for file in $local_path/*(om[1,20]); do
-    $debug rsync -a -- $file $remote_path \
+    $debug rsync -a -e 'ssh -p 1113' -- $file $remote_path \
     && echo $i,"$file" >> $log \
     && i=$(( i + 1 ))
   done
 
-  $debug rsync -a -- $log $remote_path
+  $debug rsync -e 'ssh -p 1113' -a -- $log $remote_path
 done
