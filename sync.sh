@@ -1,4 +1,4 @@
-#!env zsh
+#!/usr/bin/env zsh
 
 # hostnames
 composing_station=DS-SoundFXStations-1.local # (wifi: 10.0.0.49  , ethernet: 169.254.100.232)
