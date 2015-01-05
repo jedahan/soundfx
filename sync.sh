@@ -8,7 +8,7 @@ dj_station=DS-SoundFXStations-3.local        # (wifi: 10.0.0.34  , ethernet: 169
 remote=$dj_station
 log_name=transfer.log.txt
 
-$DEBUG && debug=echo && prefix="$HOME" && dirs=(test)
+[[ -n "$DEBUG" ]] && debug=echo && prefix="$HOME" && dirs=(test) && echo 'debugging ON!'
 
 # hostnames
 [[ `hostname` = $composing_station ]] && prefix="$HOME/Desktop/Composer" && dirs=(MicRec KeyRec Bin)
