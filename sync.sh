@@ -6,7 +6,7 @@ super_looper=DS-SoundFXStations-2.local      # (wifi: 10.0.0.202 , ethernet: 169
 dj_station=DS-SoundFXStations-3.local        # (wifi: 10.0.0.34  , ethernet: 169.254.56.100)
 
 remote=$dj_station
-log=transfer.log.txt
+log_name=transfer.log.txt
 
 $DEBUG && debug=echo && prefix="$HOME" && dirs=(test)
 
@@ -16,12 +16,17 @@ $DEBUG && debug=echo && prefix="$HOME" && dirs=(test)
 
 for remote_dir in $dirs; do
   i=0
-  [[ -f $log ]] && rm $log
-  touch $log
-  for file in $prefix/$remote_dir/*(om[1,20]); do
-    echo $i,"$file" >> $prefix/$remote_dir/$log
-    $debug rsync -a -- $file $remote:$prefix/$remote_dir/
-    i=$(( i + 1 ))
+  local_path=$prefix/$remote_dir
+  remote_path=$remote:$local_path
+  log=$local_path/$log_name
+
+  [[ -f $log ]] && rm $log; touch $log
+
+  for file in $local_path/*(om[1,20]); do
+    $debug rsync -a -- $file $remote_path \
+    && echo $i,"$file" >> $log \
+    && i=$(( i + 1 ))
   done
-  $debug rsync -a -- $log $remote:$prefix/$remote_dir/
+
+  $debug rsync -a -- $log $remote_path
 done
