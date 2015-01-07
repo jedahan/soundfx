@@ -7,7 +7,7 @@ dj_station=DS-SoundFXStations-3.local
 
 $DEBUG && debug=echo
 
-dj_prefix=$HOME/Desktop/DJ\ Station/Bin
+dj_prefix=$HOME/Desktop/DJ\ Station/DJBin
 
 # dj station
 if [[ $hostname = $dj_station ]]; then
