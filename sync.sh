@@ -11,7 +11,8 @@ dj_prefix=$HOME/Desktop/DJ\ Station/DJBin
 
 # dj station
 if [[ $HOST = $dj_station ]]; then
-  rm $dj_prefix/*(om[21,-1])
+  # remove any file except the 20 latest
+  for file in *(om[21,-1]); do rm "$file"; done
   log=$dj_prefix/somefile.txt
   [[ -f $log ]] && rm $log
   touch $log
