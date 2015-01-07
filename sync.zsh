@@ -19,6 +19,7 @@ if [[ $HOST = $dj_station ]]; then
     echo $i,"$file" >> $log
     i=$(( i + 1 ))
   done
+  rsync -a --rsh='ssh -p23731' -- "$dj_prefix" $composing_station:$HOME/Desktop/Composing/Bin
 else
   [[ $HOST = $composing_station ]] && prefix="Composer" && dirs=(MicRec KeyRec)
   [[ $HOST = $super_looper ]] && prefix="Super Looper" && dirs=(LoopRec)
