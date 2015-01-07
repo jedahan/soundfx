@@ -26,6 +26,8 @@ else
   [[ $HOST = $super_looper ]] && prefix="Super\ Looper" && dirs=(LoopRec)
 
   for dir in $dirs; do
-    $debug rsync -a -- $HOME/Desktop/$prefix/$dir/*(om[1,20]) $dj_station:$dj_prefix
+    for file in $HOME/Desktop/$prefix/$dir/*(om[1,20]); do
+      $debug rsync -a -- "$file" $dj_station:$dj_prefix
+    done
   done
 fi
