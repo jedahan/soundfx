@@ -5,7 +5,7 @@ composing_station=DS-SoundFXStations-1.local
 super_looper=DS-SoundFXStations-2.local
 dj_station=DS-SoundFXStations-3.local
 
-dj_prefix=$HOME/Desktop/DJ\ Station/DJBin
+dj_prefix="$HOME/Desktop/DJ\ Station/DJBin"
 
 # dj station
 if [[ $HOST = $dj_station ]]; then
@@ -25,7 +25,7 @@ else
 
   for dir in $dirs; do
     for file in "$HOME/Desktop/$prefix/$dir"/*(om[1,20]); do
-      rsync -e "ssh -p 23733" -a -- "$file" $dj_station:$dj_prefix/
+      rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:"$dj_prefix"
     done
   done
 fi
