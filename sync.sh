@@ -11,12 +11,12 @@ dj_prefix=$HOME/Desktop/DJ\ Station/DJBin
 
 # dj station
 if [[ $hostname = $dj_station ]]; then
-  rm ^($dj_prefix/*(om[1,20]))
+  rm $dj_prefix/*(om[21,-1])
   log=$dj_prefix/somefile.txt
   [[ -f $log ]] && rm $log
   touch $log
   i=0
-  for file in $dj_prefix/*; do
+  for file in $dj_prefix/*(om[1,20]); do
     echo $i,"$file" >> $log
     i=$(( i + 1 ))
   done
