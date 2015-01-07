@@ -1,32 +1,30 @@
 #!/usr/bin/env zsh
 
 # hostnames
-composing_station=DS-SoundFXStations-1.local # (wifi: 10.0.0.49  , ethernet: 169.254.100.232)
-super_looper=DS-SoundFXStations-2.local      # (wifi: 10.0.0.202 , ethernet: 169.254.8.27)
-dj_station=DS-SoundFXStations-3.local        # (wifi: 10.0.0.34  , ethernet: 169.254.56.100)
+composing_station=DS-SoundFXStations-1.local
+super_looper=DS-SoundFXStations-2.local
+dj_station=DS-SoundFXStations-3.local
 
-remote=$dj_station
-log_name=transfer.log.txt
+$DEBUG && debug=echo
 
-[[ -n "$DEBUG" ]] && debug=echo && prefix="$HOME" && dirs=(test) && echo 'debugging ON!'
+dj_prefix=$HOME/Desktop/DJ\ Station/Bin
 
-# hostnames
-[[ `hostname` = $composing_station ]] && prefix="$HOME/Desktop/Composer" && dirs=(MicRec KeyRec Bin)
-[[ `hostname` = $super_looper ]] && prefix="$HOME/Desktop/Super\ Looper" && dirs=(LoopRec)
-
-for remote_dir in $dirs; do
+# dj station
+if [[ $hostname = $dj_station ]]; then
+  rm ^($dj_prefix/*(om[1,20]))
+  log=$dj_prefix/somefile.txt
+  [[ -f $log ]] && rm $log
+  touch $log
   i=0
-  local_path=$prefix/$remote_dir
-  remote_path=$remote:$local_path
-  log=$local_path/$log_name
-
-  [[ -f $log ]] && rm $log; touch $log
-
-  for file in $local_path/*(om[1,20]); do
-    $debug rsync -a --delete-after -e 'ssh -p 1113' -- $file $remote_path \
-    && echo $i,"$file" >> $log \
-    && i=$(( i + 1 ))
+  for file in $dj_prefix/*; do
+    echo $i,"$file" >> $log
+    i=$(( i + 1 ))
   done
+else
+  [[ $hostname = $composing_station ]] && prefix="Composer" && dirs=(MicRec KeyRec)
+  [[ $hostname = $super_looper ]] && prefix="Super\ Looper" && dirs=(LoopRec)
 
-  $debug rsync -e 'ssh -p 1113' -a -- $log $remote_path
-done
+  for dir in $dirs; do
+    $debug rsync -a -- $HOME/Desktop/$prefix/$dir/*(om[1,20]) $dj_station:$dj_prefix
+  done
+fi
