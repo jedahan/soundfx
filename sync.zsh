@@ -24,6 +24,8 @@ else
   [[ $HOST = $composing_station ]] && prefix="Composer" && dirs=(MicRec KeyRec)
   [[ $HOST = $super_looper ]] && prefix="Super Looper" && dirs=(LoopRec)
 
+  # some notes, the quoting for different programs (rsync, for loops, etc) is all difference
+  # check the git logs for more info!
   for dir in $dirs; do
     for file in "$HOME/Desktop/$prefix/$dir"/*(om[1,20]); do
       rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:"$HOME/Desktop/DJ\ Station/DJBin"
