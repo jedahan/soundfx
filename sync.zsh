@@ -5,30 +5,58 @@ composing_station=DS-SoundFXStations-1.local
 super_looper=DS-SoundFXStations-2.local
 dj_station=DS-SoundFXStations-3.local
 
+desktop="/Users/doseum/Desktop"
 
-# dj station
-if [[ $HOST = $dj_station ]]; then
-  cd /Users/doseum/Desktop/DJStation/DJBin
-  # remove any file except the 20 latest
-  for file in *(om[21,-1]); do rm "$file"; done
+function createLogFile() {
   log=somefile.txt
   [[ -f $log ]] && rm $log
   touch $log
   i=0
   for file in *(om[1,20]); do
-    rsync -a --rsh='ssh -p23731' $file $composing_station:/Users/dosseum/Desktop/Composer/Bin
     echo $i,"$file" >> $log
     i=$(( i + 1 ))
   done
-else
-  [[ $HOST = $composing_station ]] && prefix="Composer" && dirs=(MicRec KeyRec)
-  [[ $HOST = $super_looper ]] && prefix="SuperLooper" && dirs=(LoopRec)
+}
 
-  # some notes, the quoting for different programs (rsync, for loops, etc) is all difference
-  # check the git logs for more info!
-  for dir in $dirs; do
-    for file in /Users/doseum/Desktop/$prefix/$dir/*(om[1,20]); do
-      rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:/Users/doseum/Desktop/DJStation/DJBin
+function synceverything() {
+  if [[ $HOST = $dj_station ]]; then
+    # remove all files except the 20 latest
+    cd $desktop/DJStation/DJBin
+    for file in *(om[21,-1]); do rm "$file"; done
+    createLogFile()
+
+  else if [[ $HOST = $composing_station ]]; then
+    # copy the latest 20 files from MicRec
+    cd $desktop/Composer/Bin
+    rm -rf *
+    cp ../MicRec/*(om[1,20]) .
+    createLogFile()
+
+    # sync directories to djstation
+    dirs=(MicRec KeyRec)
+    for dir in $dirs; do
+      for file in $desktop/Composer/$dir/*(om[1,20]); do
+        rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
+      done
     done
-  done
-fi
+  else if [[ $HOST = $super_looper ]]; then
+    # sync directories to djstation
+    dirs=(LoopRec)
+    for dir in $dirs; do
+      for file in $desktop/SuperLooper/$dir/*(om[1,20]); do
+        rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
+      done
+    done
+  fi
+}
+
+# do this 5 times a minute
+synceverything()
+sleep 10
+synceverything()
+sleep 10
+synceverything()
+sleep 10
+synceverything()
+sleep 10
+synceverything()
