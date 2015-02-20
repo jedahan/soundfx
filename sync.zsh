@@ -8,7 +8,7 @@ dj_station=DS-SoundFXStations-3.local
 
 # dj station
 if [[ $HOST = $dj_station ]]; then
-  cd "$HOME/Desktop/DJStation/DJBin"
+  cd /Users/doseum/Desktop/DJStation/DJBin
   # remove any file except the 20 latest
   for file in *(om[21,-1]); do rm "$file"; done
   log=somefile.txt
@@ -16,7 +16,7 @@ if [[ $HOST = $dj_station ]]; then
   touch $log
   i=0
   for file in *(om[1,20]); do
-    rsync -a --rsh='ssh -p23731' $file $composing_station:$HOME/Desktop/Composer/Bin
+    rsync -a --rsh='ssh -p23731' $file $composing_station:/Users/dosseum/Desktop/Composer/Bin
     echo $i,"$file" >> $log
     i=$(( i + 1 ))
   done
@@ -27,8 +27,8 @@ else
   # some notes, the quoting for different programs (rsync, for loops, etc) is all difference
   # check the git logs for more info!
   for dir in $dirs; do
-    for file in "$HOME/Desktop/$prefix/$dir"/*(om[1,20]); do
-      rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:"$HOME/Desktop/DJStation/DJBin"
+    for file in /Users/doseum/Desktop/$prefix/$dir/*(om[1,20]); do
+      rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:/Users/doseum/Desktop/DJStation/DJBin
     done
   done
 fi
