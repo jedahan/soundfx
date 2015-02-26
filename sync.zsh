@@ -7,7 +7,7 @@ dj_station=DS-SoundFXStations-3.local
 
 desktop="/Users/doseum/Desktop"
 
-function createLogFile() {
+function createLogFile {
   log=/var/tmp/somefile.txt
   [[ -f $log ]] && rm $log
   touch $log
@@ -19,23 +19,19 @@ function createLogFile() {
   mv $log .
 }
 
-function synceverything() {
+function synceverything {
   if [[ $HOST = $dj_station ]]; then
-    # remove all files except the 20 latest
     cd $desktop/DJStation/DJBin
     for file in *(om[21,-1]); do rm "$file"; done
-    createLogFile()
+    createLogFile
   fi
 
-
   if [[ $HOST = $composing_station ]]; then
-    # copy the latest 20 files from MicRec
     cd $desktop/Composer/Bin
     rm -rf *
     cp ../MicRec/*(om[1,20]) .
-    createLogFile()
+    createLogFile
 
-    # sync directories to djstation
     dirs=(MicRec KeyRec)
     for dir in $dirs; do
       for file in $desktop/Composer/$dir/*(om[1,20]); do
@@ -45,7 +41,7 @@ function synceverything() {
   fi
 
   if [[ $HOST = $super_looper ]]; then
-    # sync directories to djstation
+   # sync directories to djstation
     dirs=(LoopRec)
     for dir in $dirs; do
       for file in $desktop/SuperLooper/$dir/*(om[1,20]); do
@@ -56,12 +52,7 @@ function synceverything() {
 }
 
 # do this 5 times a minute
-synceverything()
-sleep 10
-synceverything()
-sleep 10
-synceverything()
-sleep 10
-synceverything()
-sleep 10
-synceverything()
+for i in {1..5}; do
+  synceverything
+  sleep 10
+done
