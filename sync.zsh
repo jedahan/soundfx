@@ -25,33 +25,33 @@ function synceverything() {
     cd $desktop/DJStation/DJBin
     for file in *(om[21,-1]); do rm "$file"; done
     createLogFile()
+  fi
 
-  else
-    if [[ $HOST = $composing_station ]]; then
-      # copy the latest 20 files from MicRec
-      cd $desktop/Composer/Bin
-      rm -rf *
-      cp ../MicRec/*(om[1,20]) .
-      createLogFile()
 
-      # sync directories to djstation
-      dirs=(MicRec KeyRec)
-      for dir in $dirs; do
-        for file in $desktop/Composer/$dir/*(om[1,20]); do
-          rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
-        done
+  if [[ $HOST = $composing_station ]]; then
+    # copy the latest 20 files from MicRec
+    cd $desktop/Composer/Bin
+    rm -rf *
+    cp ../MicRec/*(om[1,20]) .
+    createLogFile()
+
+    # sync directories to djstation
+    dirs=(MicRec KeyRec)
+    for dir in $dirs; do
+      for file in $desktop/Composer/$dir/*(om[1,20]); do
+        rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
       done
-    else
-      if [[ $HOST = $super_looper ]]; then
-        # sync directories to djstation
-        dirs=(LoopRec)
-        for dir in $dirs; do
-          for file in $desktop/SuperLooper/$dir/*(om[1,20]); do
-            rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
-          done
-        done
-      fi
-    fi
+    done
+  fi
+
+  if [[ $HOST = $super_looper ]]; then
+    # sync directories to djstation
+    dirs=(LoopRec)
+    for dir in $dirs; do
+      for file in $desktop/SuperLooper/$dir/*(om[1,20]); do
+        rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
+      done
+    done
   fi
 }
 
