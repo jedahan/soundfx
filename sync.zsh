@@ -8,6 +8,7 @@ dj_station=DS-SoundFXStations-3.local
 desktop="/Users/doseum/Desktop"
 
 function createLogFile {
+  rm somefile.txt
   log=/var/tmp/somefile.txt
   [[ -f $log ]] && rm $log
   touch $log
@@ -20,12 +21,6 @@ function createLogFile {
 }
 
 function synceverything {
-  if [[ $HOST = $dj_station ]]; then
-    cd $desktop/DJStation/DJBin
-    for file in *(om[21,-1]); do rm "$file"; done
-    createLogFile
-  fi
-
   if [[ $HOST = $composing_station ]]; then
     cd $desktop/Composer/Bin
     rm -rf *
@@ -48,6 +43,12 @@ function synceverything {
         rsync -a --rsh='ssh -p23733' -- "$file" $dj_station:$desktop/DJStation/DJBin
       done
     done
+  fi
+
+  if [[ $HOST = $dj_station ]]; then
+    cd $desktop/DJStation/DJBin
+    for file in *(om[21,-1]); do rm "$file"; done
+    createLogFile
   fi
 }
 
