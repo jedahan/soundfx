@@ -14,7 +14,7 @@ function createLogFile {
   touch $log
   i=0
   for file in *(om[1,20]); do
-    echo $i,"$PWD/$file" >> $log
+    echo "$i, \"Macintosh HD:$PWD/$file\";" >> $log
     i=$(( i + 1 ))
   done
   mv $log .
