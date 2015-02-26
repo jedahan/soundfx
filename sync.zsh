@@ -8,7 +8,7 @@ dj_station=DS-SoundFXStations-3.local
 desktop="/Users/doseum/Desktop"
 
 function createLogFile() {
-  log=somefile.txt
+  log=/var/tmp/somefile.txt
   [[ -f $log ]] && rm $log
   touch $log
   i=0
@@ -16,6 +16,7 @@ function createLogFile() {
     echo $i,"$file" >> $log
     i=$(( i + 1 ))
   done
+  mv $log .
 }
 
 function synceverything() {
